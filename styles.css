@@ -13,6 +13,11 @@ h2{
     font-size: medium;
     font-weight: 300;
 }
+h3 {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light","Helvetica Neue";
+    font-size:small;
+    font-weight: 200;
+}
 p {
     font-size: small;
     font-weight: 300;
