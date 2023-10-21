@@ -1,0 +1,928 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Stack Buffer Overflow Attack</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+
+</style></head><body><article id="4a98a4a0-e661-4594-828d-0db757dd8082" class="page serif"><header><h1 class="page-title">Stack Buffer Overflow Attack</h1><p class="page-description"></p><p>Back to <span><a href="/blogs.html">Blog</a> page</span></p></header><div class="page-body"><p id="c2944c54-d2f5-4bef-93dc-497b0e41f714" class="">Inspiration from the code snippet, mentioned below</p><figure id="ed750b5f-162b-411d-a10d-1495faff3fe9"><a href="https://www.youtube.com/watch?v=1YGD94lSor8&amp;t=125s" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">The Windows Source Code Revealed: Task Manager (E01)</div><div class="bookmark-description">The original author of Windows Task Manager takes you on an authorized tour of the Windows source code behind the XP Task Manager.  For information on my book, Secrets of the Autistic Millionaire: https://amzn.to/45ZzcFW
+
+Windows code provided courtesy of Microsoft Corporation; this code is NOT open source and it remains Microsoft copyrighted material, used with permission.</div></div><div class="bookmark-href"><img src="https://www.youtube.com/s/desktop/7a13cbe7/img/favicon_144x144.png" class="icon bookmark-icon"/>https://www.youtube.com/watch?v=1YGD94lSor8&amp;t=125s</div></div><img src="https://i.ytimg.com/vi/1YGD94lSor8/maxresdefault.jpg" class="bookmark-image"/></a></figure><figure id="7cadb76d-190a-4489-a13c-3f165b64940f" class="image"><a href="Stack%20Buffer%20Overflow%20Attack%204a98a4a0e6614594828d0db757dd8082/Untitled.png"><img style="width:849px" src="Stack%20Buffer%20Overflow%20Attack%204a98a4a0e6614594828d0db757dd8082/Untitled.png"/></a></figure><p id="5461ca77-73c2-4536-93e2-38f718e3938f" class="">
+</p><p id="038afba3-ff48-495c-a98a-c282debdeb68" class=""><em>In the code snippet, Dave Plummer the genius behind the Windows Task Manager mentioned about </em><em><a href="https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/security-init-cookie?view=msvc-170">__security_init_cookie()</a></em><em> and how it can be essential to prevent Stack Buffer overflow attacks. To understand the Stack Buffer Overflow exploit, i gathered around few resources off the internet and compiled in one single blog. Hope you enjoy reading it..</em></p><p id="564b7441-5391-4229-ae01-833c48e4c551" class="">
+</p><h2 id="a3b702c5-b407-4360-87b0-a6809c08f7a9" class="">SBO Attack in a nutshell</h2><p id="14370b41-fbd8-4cda-9bbd-9c27c10ee725" class="">When a program is compiled, a space is created in memory (RAM) for storing data in variables declared in the program’s code, well basically a call stack. The stack comprises of data stored in variables as well as pointers to function calls as the program is read out.</p><p id="d250dfe3-2bb1-4299-8f4c-2318ae862a67" class="">In case of the code that is vulnerable to this attack, the contents of the variables stored in the memory can be modified. Then we can change the flow of the code either by modifying the contents of the data of the variable or make the variable point to a section in the stack where it can run malicious code, such as opening a shell to the remote system etc.</p><figure id="923a0e1c-4121-4fc7-920c-46f2461704fe" class="image"><a href="Stack%20Buffer%20Overflow%20Attack%204a98a4a0e6614594828d0db757dd8082/Untitled%201.png"><img style="width:342px" src="Stack%20Buffer%20Overflow%20Attack%204a98a4a0e6614594828d0db757dd8082/Untitled%201.png"/></a><figcaption>Memory Call Stack</figcaption></figure><p id="7dc8f0f1-06e9-4509-aef3-17dcac3d63fd" class="">
+This example is based from the blog article by Rapid7</p><figure id="fad6bd18-f028-4816-9731-6360ee5e1686"><a href="https://www.rapid7.com/blog/post/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Stack-Based Buffer Overflow Attacks: Explained | Rapid7 | Rapid7 Blog</div><div class="bookmark-description">Stack-based buffer overflow exploits are likely the shiniest and most common form of exploit for remotely taking over the code execution of a process.</div></div><div class="bookmark-href"><img src="https://www.rapid7.com/includes/img/favicon.ico" class="icon bookmark-icon"/>https://www.rapid7.com/blog/post/2019/02/19/stack-based-buffer-overflow-attacks-what-you-need-to-know/</div></div><img src="https://blog.rapid7.com/content/images/2019/02/Keyboard.jpg" class="bookmark-image"/></a></figure><pre id="87737c98-d24e-48bf-8cae-d9f44baf70ac" class="code"><code>#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+int main(){
+	char realPassword[20];
+	char givenPassword[20];
+
+	strncpy(realPassword, &quot;ddddddddddddddd&quot;, 20);
+	gets(givenPassword);
+	
+	if (0 == strncmp(givenPassword, realPassword, 20)){
+		printf(&quot;SUCCESS!\n&quot;);
+	}else{
+		printf(&quot;FAILURE!\n&quot;);
+	}
+	raise(SIGINT);
+	printf(&quot;givenPassword: %s\n&quot;, givenPassword);
+	printf(&quot;realPassword: %s\n&quot;, realPassword);
+	return 0;
+}</code></pre><p id="d10c5b77-c2d3-4559-98db-b184c98be1b3" class="">Take a look of the code mentioned above, this looks like a simple program. But notice that we have used <strong>gets</strong> function to store input to the variable “givenPassword”. </p><p id="65ebcf90-aa6b-489e-986f-d613694b984a" class="">The reason why you as a  programmer should never use the <strong>gets </strong>function in your code is; regardless of how lengthy your input string can be, it can store data from the input given to your program to the address of wherever the variable is allocated in the stack. Thus, it can overload the stack buffers incase if the size declared for the variable in the code exceeds.</p><p id="d67f0745-f2bf-439f-aee3-5fa8e252b9e6" class="">We go in depth to explain how this exploit works:</p><p id="320f3376-728f-4090-9741-f2379c0e252f" class="">Now, what you would do is, you would type a recurring character such as A or B repeatedly until it exceeds the size allocated to the variable.</p><pre id="cb58271d-db6f-4cf6-b753-df4081333f94" class="code"><code>(gdb) x/200x 0x7fffffffddd0
+0x7fffffffddd0:	0x00000000	0x00000000	0x00400701	0x00000000
+0x7fffffffdde0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffddf0:	0x00000000	0x00000000	0x00000000	0x00000000
+0x7fffffffde00:	0x64646464	0x64646464	0x64646464	0x00646464
+0x7fffffffde10:	0x00000000	0x00007fff	0x00000000	0x00000000
+.
+.
+.</code></pre><p id="9fea5ddb-bb8a-4446-afca-5f3959131a8a" class="">In the debugger output above, we can see the second line is one containing the contents of the input variable “givenPassword” that is ‘A’ repeated multiple times and in the fourth line we have the contents of the variable “realPassword” that is ‘d’.</p><p id="08f9ddb6-db28-4806-b491-9ac44bd3ca9c" class="">In order to perform this exploit we have to the fill the contents of the fourth line with the input ‘A’ to “fool” the program. To do that simply you would type AAAAAAAAAAAAAAAAAAAAAA having more than 20 characters until you reach the length of the buffer for the second variable , it would also modify the content of the other variable “realPassword” which we are trying to compare the input variable  “givenPassword”.</p><p id="4c9c1ce9-2deb-4262-b17f-6dd9ff48fc55" class="">
+</p><p id="a6816811-7352-44b4-a191-9d7f68f87f3b" class="">Lets try with 30 chars of ‘A’ ‘s</p><pre id="23b761a5-37d5-4a86-9e74-a914bdb9a936" class="code"><code>msfuser@ubuntu:~$ gdb example.elf
+.
+.
+.
+(gdb) run
+Starting program: /home/msfuser/example.elf 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+FAILURE!
+givenPassword: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+realPassword: ddddddddddddddd
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7a42428 in __GI_raise (sig=2) at ../sysdeps/unix/sysv/linux/raise.c:54
+54	../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdde0:
+ rip = 0x7ffff7a42428 in __GI_raise (../sysdeps/unix/sysv/linux/raise.c:54); saved rip = 0x40072d
+ called by frame at 0x7fffffffde30
+ source language c.
+ Arglist at 0x7fffffffddd0, args: sig=2
+ Locals at 0x7fffffffddd0, Previous frame&#x27;s sp is 0x7fffffffdde0
+ Saved registers:
+  rip at 0x7fffffffddd8
+(gdb) x/200x 0x7fffffffddd0
+0x7fffffffddd0:	0x00000000	0x00000000	0x0040072d	0x00000000
+0x7fffffffdde0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffddf0:	0x61616161	0x61616161	0x61616161	0x00006161
+0x7fffffffde00:	0x64646464	0x64646464	0x64646464	0x00646464
+0x7fffffffde10:	0x00000000	0x00007fff	0x00000000	0x00000000
+0x7fffffffde20:	0x00400740	0x00000000	0xf7a2d830	0x00007fff
+0x7fffffffde30:	0x00000000	0x00000000	0xffffdf08	0x00007fff</code></pre><p id="177844fc-e957-4815-91b7-240d90b708ac" class="">
+</p><p id="be0eb625-eeb7-4d19-985a-8b23d07ed402" class="">Here we can notice that the variable content for <strong>givenPassword</strong> (mentioned in the second line) is filled with A’s and the rest of them has gone to the buffer (mentioned in the third line) but it is not sufficient enough to fill the fourth line containing the contents of the variable <strong>realPassword. </strong>So lets try with 40 A’s</p><p id="53dea166-bbec-442c-a0ab-b7060e6567d3" class="">
+</p><pre id="e9cb33f1-34c3-4024-9bb4-215363a27c2c" class="code"><code>msfuser@ubuntu:~$ gdb example.elf
+.
+.
+.
+(gdb) run
+Starting program: /home/msfuser/example.elf 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+FAILURE!
+givenPassword: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+realPassword: aaaaaaaa
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7a42428 in __GI_raise (sig=2) at ../sysdeps/unix/sysv/linux/raise.c:54
+54	../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+.
+.
+.
+(gdb) x/200x 0x7fffffffddd0
+0x7fffffffddd0:	0x00000000	0x00000000	0x0040072d	0x00000000
+0x7fffffffdde0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffddf0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffde00:	0x61616161	0x61616161	0x64646400	0x00646464
+0x7fffffffde10:	0x00000000	0x00007fff	0x00000000	0x00000000
+0x7fffffffde20:	0x00400740	0x00000000	0xf7a2d830	0x00007fff</code></pre><p id="8fd75aca-e183-4db0-852b-de9d047d25d2" class="">
+</p><p id="b568ad0f-7ccc-4196-914c-e06f88945ea0" class="">Here we can see that on the fourth line, some A’s have filled which we can see in the output as shown above, but still not sufficient to fool the comparison.</p><p id="6d2daf8b-8914-441b-81f6-5cd7f8cb30b5" class="">What we did so far?</p><p id="c9e9e60c-f192-4171-9eae-1f4c48224e03" class="">20 A’s has filled givenPassword</p><p id="98210de3-b08b-4201-b5cc-bae5bb7b9a1f" class="">12 A’s has filled the buffer in between</p><p id="a501220e-27e9-49e6-b3a4-b3d471377496" class="">8 A’s has filled realPassword</p><p id="f0b80e20-7fb2-43ee-a6f1-50812c6b56ec" class="">
+</p><p id="4a41a05f-8896-4736-a29d-5c6982497cc0" class="">Now we need 12 more A’s in the realPassword, in order to successfully exploit the program</p><pre id="580abb81-9a15-494f-9cbc-2f8246a0d9be" class="code"><code>msfuser@ubuntu:~$ gdb example.elf
+.
+.
+.
+(gdb) run
+Starting program: /home/msfuser/example.elf 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+SUCCESS!
+givenPassword: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+realPassword: aaaaaaaaaaaaaaaaaaaa
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7a42428 in __GI_raise (sig=2) at ../sysdeps/unix/sysv/linux/raise.c:54
+54	../sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdde0:
+ rip = 0x7ffff7a42428 in __GI_raise (../sysdeps/unix/sysv/linux/raise.c:54); saved rip = 0x40072d
+ called by frame at 0x7fffffffde30
+ source language c.
+ Arglist at 0x7fffffffddd0, args: sig=2
+ Locals at 0x7fffffffddd0, Previous frame&#x27;s sp is 0x7fffffffdde0
+ Saved registers:
+  rip at 0x7fffffffddd8
+(gdb) x/200x 0x7fffffffddd0
+0x7fffffffddd0:	0x00000000	0x00000000	0x0040072d	0x00000000
+0x7fffffffdde0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffddf0:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffde00:	0x61616161	0x61616161	0x61616161	0x61616161
+0x7fffffffde10:	0x61616161	0x00007f00	0x00000000	0x00000000</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="0a11de90-c810-417d-8eda-08e17c64b472"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">To the person witnessing the attack and who is not aware of the functioning of the code, we have essentially changed the content of the actual password by overflowing input. This way, we have “hacked” the program.</div></figure><p id="3a83dc7c-73f6-4504-b69c-1847d11daf95" class="">
+</p><p id="f253de85-9cf8-45a6-a348-70a28f7f3736" class="">HOWEVER! The declaration of the variable matters the most. Take a look at the snippets below and the output it gave</p><pre id="437267b5-c63a-4ce4-8372-f74e9c116f1d" class="code"><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+int main()
+{
+        char inputString[10];
+        char testString[10];
+        strncpy(testString, &quot;cccccccccc&quot;,10);
+        gets(inputString);
+
+        if(0 == strncmp(inputString, testString, 10))
+        {
+                printf(&quot;SUCCESS\n&quot;);
+        }
+        else
+        {
+                printf(&quot;Wrong String\n&quot;);
+        }
+        printf(&quot;Original String: %s\n&quot;,testString);
+        printf(&quot;Test String: %s\n&quot;, inputString);
+        return 0;
+}</code></pre><p id="76bc997f-cb0e-4a3f-aee3-dca42f6211e9" class="">Now, lets test the output for the code</p><pre id="043a324d-2540-41c1-94e9-25e92e0aefe4" class="code"><code>root@e638e97c66f5:/home/test-user# ./a.out
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Wrong String
+Original String: ccccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Test String: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Segmentation fault</code></pre><p id="1adb1ca2-e68e-45ed-8e25-b7161b51c699" class="">Here we can see that original string got appended with the additional buffers.</p><p id="ba12699e-6e55-4c38-af5b-5d014435bc59" class="">
+</p><p id="a6bd40b3-167f-4da6-b983-84ae804a2cb8" class="">Let’s change declare testString before inputString and see the difference</p><pre id="c15a1591-741f-483f-b2b4-c8de32197c2c" class="code"><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+int main()
+{
+        char testString[10];
+        char inputString[10];
+        strncpy(testString, &quot;cccccccccc&quot;,10);
+        gets(inputString);
+
+        if(0 == strncmp(inputString, testString, 10))
+        {
+                printf(&quot;SUCCESS\n&quot;);
+        }
+        else
+        {
+                printf(&quot;Wrong String\n&quot;);
+        }
+        printf(&quot;Original String: %s\n&quot;,testString);
+        printf(&quot;Test String: %s\n&quot;, inputString);
+        return 0;
+}</code></pre><p id="d3d9bb43-cff0-4cc3-96a3-19542651efa4" class="">Here are the results</p><pre id="90735614-2845-4633-8174-235803e481fd" class="code"><code>root@e638e97c66f5:/home/test-user# ./a.out
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+SUCCESS
+Original String: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Test String: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Segmentation fault</code></pre><p id="fda9bc0b-f8d3-4fa5-9935-bb61877e819d" class="">As we can see the buffers got populated in the original string thus exploiting the code.</p><blockquote id="dd91f34e-1c9d-4607-8e33-cf08cc4eb3ed" class="">In Principle, the buffers get filled from top to bottom of the stack, hence overwriting the contents of all the variables that are declared later on.</blockquote><p id="1de93213-9ddb-4e8a-9e52-69da46c70c2c" class="">Some caveats,</p><p id="19e61487-38ae-4a0f-8f58-187574e2544e" class="">To prevent getting the value changed of the variable make sure of two things:</p><ol type="1" id="740e9e56-b07f-4a31-a70b-952f5bc19ea1" class="numbered-list" start="1"><li>Always declare the variables where input strings are stored, then declare the other variables containing the data </li></ol><ol type="1" id="273138e0-bc5c-41a9-a7ff-a9335b564320" class="numbered-list" start="2"><li>When using <strong>strncpy</strong> command to copy the strings, ensure to keep the <strong>size</strong> bigger than the length of the string2 that is getting copied to string1 i.e.<p id="23d02ac9-60a7-4582-ae34-97a70e9ecc3d" class="">char *strncpy(char *string1, const char *string2, size_t count);</p><p id="f77cff20-fe3a-448c-b669-2d61853e8a60" class="">strncpy(testString, &quot;cccc&quot;,10);</p><p id="7bf77910-73a0-4385-9f74-142463d0cb7c" class="">Here 10 i.e. count is bigger than the length of string2 (4). Hence rest of the empty string will be just escape chars.</p><p id="b12275f3-346d-49ff-ae73-f54d7369024f" class="">
+</p></li></ol><p id="bda6f527-00a5-462b-848f-e59f90cb9db8" class="">
+</p><p id="2ee293f5-da9c-4f86-9a4d-7d38ac10d755" class="">If we use a similar strategy, we can change the content of the variable in order the code to point to a function call.</p><p id="7f0accb0-5e54-4aa2-afe1-50a1f00b71ce" class="">We use the following code to demonstrate how we can essentially change the flow of the code, by making the code make a function call that is not intended to do.</p><p id="1b03f13d-0924-43ed-9326-ef009e910679" class="">Code obtained from: </p><figure id="2185292d-1fd3-4961-8996-53d2fece0875"><a href="https://exploit.education/protostar/stack-three/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Stack Three :: Andrew Griffiths&#x27; Exploit Education</div><div class="bookmark-description">Stack3 looks at environment variables, and how they can be set, and overwriting
+function pointers stored on the stack (as a prelude to overwriting the saved
+EIP)</div></div><div class="bookmark-href"><img src="https://exploit.education/images/favicon.png" class="icon bookmark-icon"/>https://exploit.education/protostar/stack-three/</div></div></a></figure><pre id="947d1d30-e4f7-402c-addd-1654e106991e" class="code"><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+void win()
+{
+  printf(&quot;code flow successfully changed\n&quot;);
+}
+
+int main(int argc, char **argv)
+{
+  volatile int (*fp)();
+  char buffer[64];
+
+  fp = 0;
+
+  gets(buffer);
+
+  if(fp) {
+      printf(&quot;calling function pointer, jumping to 0x%08x\n&quot;, fp);
+      fp();
+  }
+}</code></pre><p id="7bb7f8b0-1cf0-4741-b3b1-19178dad87bb" class="">
+</p><p id="c5a30ad4-ea31-4fb5-81e5-b8b4b41180a2" class="">In this case, we want to make the buffer overflow in such a way that the function “win” is called.</p><p id="ca5d16d6-deb0-4119-bda9-cb85533235f7" class="">How can this be achieved?</p><pre id="1b5943a7-0a53-401d-acd5-125c6ebced04" class="code"><code>volatile int (*fp)();</code></pre><p id="d0ed7b6b-2a8a-4be8-b2a4-447019f722e6" class="">Here we have a function prototype defined such a way that the call to the function pointer can be manipulated by overflowing the contents of the buffers of the stack. Because of using the keyword “volatile” we can essentially make the function call to our targeted function i.e. “win”</p><p id="bee115ff-c073-48de-8791-a9072016ead0" class="">The exploit is explained and performed in detail in this video:
+</p><figure id="feebc5a7-535b-4703-b72b-75eb541772fc"><a href="https://www.youtube.com/watch?v=8QzOC8HfOqU" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Buffer Overflows can Redirect Program Execution - bin 0x0D</div><div class="bookmark-description">This video shows you how to take over control of a program with a buffer overflow
+
+stack3: https://exploit.education/protostar/stack-three/
+stack4: https://exploit.education/protostar/stack-four/
+
+-=[ 🔴 Stuff I use ]=-
+
+→ Microphone:* https://geni.us/ntg3b
+→ Graphics tablet:* https://geni.us/wacom-intuos
+→ Camera#1 for streaming:* https://geni.us/sony-camera
+→ Lens for streaming:* https://geni.us/sony-lense
+→ Connect Camera#1 to PC:* https://geni.us/cam-link
+→ Keyboard:* https://geni.us/mech-keyboard
+→ Old Microphone:* https://geni.us/mic-at2020usb
+
+US Store Front:* https://www.amazon.com/shop/liveoverflow
+
+-=[ ❤️ Support ]=-
+
+→ per Video: https://www.patreon.com/join/liveoverflow
+→ per Month: https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w/join
+
+-=[ 🐕 Social ]=-
+
+→ Twitter: https://twitter.com/LiveOverflow/
+→ Website: https://liveoverflow.com/
+→ Subreddit: https://www.reddit.com/r/LiveOverflow/
+→ Facebook: https://www.facebook.com/LiveOverflow/
+
+-=[ 📄 P.S. ]=-
+
+All links with &quot;*&quot; are affiliate links.
+LiveOverflow / Security Flag GmbH is part of the Amazon Affiliate Partner Programm.
+
+#BufferOverflow #BinaryExploitation</div></div><div class="bookmark-href"><img src="https://www.youtube.com/s/desktop/7a13cbe7/img/favicon_144x144.png" class="icon bookmark-icon"/>https://www.youtube.com/watch?v=8QzOC8HfOqU</div></div><img src="https://i.ytimg.com/vi/8QzOC8HfOqU/maxresdefault.jpg" class="bookmark-image"/></a></figure><p id="67dad31e-2ba9-462d-8540-b0b7d8e56060" class="">
+</p><h2 id="5ec22956-b242-4a1d-8028-86e7c2e4d0dc" class="">Further reading</h2><figure id="62703615-21a2-4ced-89d2-3027c693bf18"><a href="https://wiki.skullsecurity.org/index.php?title=Registers#esp" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Registers - SkullSecurity</div><div class="bookmark-description">This section is the first section specific to assembly. So if you&#x27;re reading through the full guide, get ready for some actual learning!</div></div><div class="bookmark-href"><img src="https://wiki.skullsecurity.org/favicon.ico" class="icon bookmark-icon"/>https://wiki.skullsecurity.org/index.php?title=Registers#esp</div></div></a></figure><figure id="4b217df4-4c90-4b68-9966-8130eec9087f"><a href="https://www.youtube.com/watch?v=1S0aBV-Waeo" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Running a Buffer Overflow Attack - Computerphile</div><div class="bookmark-description">Making yourself the all-powerful &quot;Root&quot; super-user on a computer using a buffer overflow attack. Assistant Professor Dr Mike Pound details how it&#x27;s done.
+
+Formerly titled &quot;Buffer Overflow Attack&quot; -Aug 2021
+
+The Stack: https://youtu.be/7ha78yWRDlE 
+Botnets: https://youtu.be/UVFmC178_Vs
+The Golden Key: iPhone Encryption: https://youtu.be/6RNKtwAGvqc
+3D Stereo Vision: https://youtu.be/O7B2vCsTpC0 
+Brain Scanner: https://youtu.be/TQ0sL1ZGnQ4 
+
+http://www.facebook.com/computerphile
+https://twitter.com/computer_phile
+
+This video was filmed and edited by Sean Riley.
+
+Computer Science at the University of Nottingham: http://bit.ly/nottscomputer
+
+Computerphile is a sister project to Brady Haran&#x27;s Numberphile. More at http://www.bradyharan.com</div></div><div class="bookmark-href"><img src="https://www.youtube.com/s/desktop/f9e9fd40/img/favicon_144x144.png" class="icon bookmark-icon"/>https://www.youtube.com/watch?v=1S0aBV-Waeo</div></div><img src="https://i.ytimg.com/vi/1S0aBV-Waeo/maxresdefault.jpg" class="bookmark-image"/></a></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
