@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 
 import { GrLinkNext } from "react-icons/gr";
-import { FaRProject } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { IoLogoGithub } from "react-icons/io";
 export default function Home() {
@@ -33,8 +32,8 @@ export default function Home() {
               <h1>Vinayak Jaiwant</h1>
               <p style={{ fontStyle: "italic" }}>In Pursuit of Pure Wisdom and Excellence</p>
             </Col>
-            <Col className="mt-5" md={1}>
-              <Row xs={3}>
+            <Col xs={1}>
+              <Row>
                 <Col>
                 <Link href="https://github.com/tlynx538">
                     <IoLogoGithub size={"30px"}/>
@@ -64,7 +63,7 @@ export default function Home() {
           <Row className="p-3">
             <Col md={8}>
               <h3 className='mb-2'>Projects</h3>
-              <Container className='p-2' style={{overflowY: "auto", maxHeight:"550px"}}>
+              <Container className='p-2' style={{overflowY: "auto", maxHeight:"550px", maxWidth: "900px"}}>
                 <Col>
                   <Card.Root width="800px" className='mb-3 p-3'>
                     <Card.Body gap="2">
@@ -91,11 +90,6 @@ export default function Home() {
                       Our project analyzes electric vehicle (EV) adoption trends in Washington State. We aim to derive insights that can help guide policy decisions, infrastructure investments, and promote EV accessibility across various regions. 
                       </Card.Description>
                       <Row md={1}>
-                      <Col>
-                        <Badge variant="solid" colorPalette="red" className='p-1'>
-                          <FaRProject size={"30px"}/>
-                        </Badge>
-                      </Col>
                       </Row>
                     </Card.Body>
                     <Card.Footer justifyContent="flex-end">
@@ -133,7 +127,7 @@ export default function Home() {
                 </Col>
               </Container>
             </Col>
-            <Col md={4}>
+            <Col md={4} className='mt-3'>
               <h3> Professional Experience </h3>
               <Container className='mt-4'>
                 <TimelineRoot>
