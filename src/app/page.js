@@ -59,9 +59,9 @@ export default function Home() {
           <Row className="p-3">
             <Col md={8}>
               <h3 className='mb-2'>Projects</h3>
-              <Container className='p-2' style={{overflowY: "auto", maxHeight:"550px", maxWidth: "900px", minWidth: "450px"}}>
+              <Container style={{overflowY: "auto", maxHeight:"550px", maxWidth: "900px", width: "100%", maxWidth: "900px"}}>
                 <Col>
-                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
+                  <Card.Root className='mb-3 p-3' style={{width: "100%", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">Library Management System</Card.Title>
                       <Card.Description>
@@ -79,7 +79,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
+                  <Card.Root className='mb-3 p-3' style={{width: "100%", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">Analyzing Electric Vehicle Adoption Patterns In Washington State</Card.Title>
                       <Card.Description>
@@ -94,7 +94,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
+                  <Card.Root className='mb-3 p-3' style={{width: "100%", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">PriceWatch</Card.Title>
                       <Card.Description>
@@ -107,7 +107,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
+                  <Card.Root className='mb-3 p-3' style={{width: "100%", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">CovXray</Card.Title>
                       <Card.Description>
