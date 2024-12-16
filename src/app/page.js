@@ -27,27 +27,23 @@ export default function Home() {
     <Theme appearance='dark'>
       <div>
         <Container className="p-3">
-          <Row>
-            <Col>
-              <h1>Vinayak Jaiwant</h1>
-              <p style={{ fontStyle: "italic" }}>In Pursuit of Pure Wisdom and Excellence</p>
-            </Col>
-            <Col xs={1}>
-              <Row>
-                <Col>
-                <Link href="https://github.com/tlynx538">
-                    <IoLogoGithub size={"30px"}/>
-                  </Link>
-                </Col>
-                <Col>
-                <Link href="https://www.linkedin.com/in/vjaiwantx/">
-                <FaLinkedin size={"30px"}/>
-                </Link>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <hr />
+          <Row className='p-1'>
+          <Row className="align-items-center">
+  <Col>
+    <h1>Vinayak Jaiwant</h1>
+    <p style={{ fontStyle: "italic" }}>In Pursuit of Pure Wisdom and Excellence</p>
+  </Col>
+  <Col xs="auto" className="ms-auto">
+    <Link href="https://github.com/tlynx538" className="me-3">
+      <IoLogoGithub size={"30px"}/>
+    </Link>
+    <Link href="https://www.linkedin.com/in/vjaiwantx/">
+      <FaLinkedin size={"30px"}/>
+    </Link>
+  </Col>
+</Row>
+</Row>
+<hr />
           <Row className="mt-3 p-3">
             <h3> &gt; $whoami</h3>
             <Container>
@@ -63,9 +59,9 @@ export default function Home() {
           <Row className="p-3">
             <Col md={8}>
               <h3 className='mb-2'>Projects</h3>
-              <Container className='p-2' style={{overflowY: "auto", maxHeight:"550px", maxWidth: "900px"}}>
+              <Container className='p-2' style={{overflowY: "auto", maxHeight:"550px", maxWidth: "900px", minWidth: "450px"}}>
                 <Col>
-                  <Card.Root width="800px" className='mb-3 p-3'>
+                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">Library Management System</Card.Title>
                       <Card.Description>
@@ -83,7 +79,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root width="800px" className='mb-3 p-3'>
+                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">Analyzing Electric Vehicle Adoption Patterns In Washington State</Card.Title>
                       <Card.Description>
@@ -98,7 +94,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root width="800px" className='mb-3 p-3'>
+                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">PriceWatch</Card.Title>
                       <Card.Description>
@@ -111,7 +107,7 @@ export default function Home() {
                     </Icon>
                     </Card.Footer>
                   </Card.Root>
-                  <Card.Root width="800px" className='mb-3 p-3'>
+                  <Card.Root className='mb-3 p-3' style={{minWidth: "450px", maxWidth: "850px"}}>
                     <Card.Body gap="2">
                       <Card.Title mt="2">CovXray</Card.Title>
                       <Card.Description>
