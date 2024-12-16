@@ -163,7 +163,7 @@ export default function Home() {
                       <TimelineTitle>
                         Part Time System Engineer
                       </TimelineTitle>
-                      <b>NTT Data</b>
+                      <b>Shreshta IT</b>
                       <TimelineDescription>Jan 2021 - July 2021</TimelineDescription>
                       <Text className='mt-1'>
                         Provided on-site support for customers to resolve network and hardware issues
