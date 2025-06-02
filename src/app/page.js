@@ -48,6 +48,7 @@ export default function Home() {
             <h3> &gt; $whoami</h3>
             <Container>
               <List.Root>
+                <List.Item>IT and Data Analytics Intern at <b>Dallas Rugs</b></List.Item>
                 <List.Item>Masters&apos; Student (Business Analytics & AI) at <b>Naveen Jindal School of Management, University of Texas at Dallas</b>.</List.Item>
                 <List.Item>~3 years of experience in the IT industry working for <b>NTT Data</b> and <b>Owens & Minor</b>.</List.Item>
                 <List.Item>Bachelors&apos; of Engineering in Computer Science and Engineering at <b>KLE Technological University, Dr. M.S Sheshgiri Campus</b>.</List.Item>
@@ -127,6 +128,20 @@ export default function Home() {
               <h3> Professional Experience </h3>
               <Container className='mt-4'>
                 <TimelineRoot>
+                  <TimelineItem>
+                    <TimelineConnector bg="border.emphasized" color="teal.contrast">
+                    </TimelineConnector>
+                    <TimelineContent gap="1">
+                      <TimelineTitle>
+                        IT and Data Analytics Intern
+                      </TimelineTitle>
+                      <b>Dallas Rugs</b>
+                      <TimelineDescription>June 2025 - Present</TimelineDescription>
+                      <Text className='mt-1'>
+                        Developed and optimized databases, generated automated reports, and supported data-driven business decisions and operations.
+                      </Text>
+                    </TimelineContent>
+                  </TimelineItem>
                   <TimelineItem>
                     <TimelineConnector bg="border.emphasized" color="teal.contrast">
                     </TimelineConnector>
