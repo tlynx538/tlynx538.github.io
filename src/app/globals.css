@@ -10,6 +10,99 @@
   }
 }
 
+/* ---------------------------
+   Helvetica Neue
+---------------------------- */
+@font-face {
+  font-family: "Helvetica Neue Black";
+  src: url("/fonts/HelveticaNeueBlack.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Black";
+  src: url("/fonts/HelveticaNeueBlackItalic.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Bold";
+  src: url("/fonts/HelveticaNeueBold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Bold";
+  src: url("/fonts/HelveticaNeueBoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Medium";
+  src: url("/fonts/HelveticaNeueMedium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Medium";
+  src: url("/fonts/HelveticaNeueMediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Thin";
+  src: url("/fonts/HelveticaNeueThin.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Thin";
+  src: url("/fonts/HelveticaNeueThinItalic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* ---------------------------
+   Helvetica Now Text
+---------------------------- */
+@font-face {
+  font-family: "Helvetica Now Text Black";
+  src: url("/fonts/helveticanowtext-black-demo.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Now Text Black";
+  src: url("/fonts/helveticanowtext-blackitalic-demo.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Helvetica Now Text Bold";
+  src: url("/fonts/helveticanowtext-bold-demo.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Helvetica Now Text Bold";
+  src: url("/fonts/helveticanowtext-bolditalic-demo.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* ---------------------------
+   Base Styles
+---------------------------- */
 html,
 body {
   max-width: 100vw;
@@ -19,7 +112,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Helvetica Now Text", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

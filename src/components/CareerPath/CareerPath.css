@@ -1,0 +1,61 @@
+.glow-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #0881e4; /* chakra blue.400 */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;       /* center vertically */
+  left: 50%;      /* center horizontally */
+  transform: translate(-50%, -50%);
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9);
+    box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 12px rgba(66, 153, 225, 0);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.9);
+    box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+  }
+}
+
+
+.glow-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background-color: #33ff99; /* green */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #00bfff, 0 0 20px #24b76e;
+}
+
+.check-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.green-check {
+  color: #4caf50; /* green */
+}
+
+.gray-dot {
+  width: 12px;
+  height: 12px;
+  background-color: gray;
+  border-radius: 50%;
+}
+
