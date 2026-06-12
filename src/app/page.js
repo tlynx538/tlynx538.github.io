@@ -1,5 +1,5 @@
 import { Row, Col, Container } from "react-bootstrap";
-import { List, Link, Theme, Span } from "@chakra-ui/react";
+import { List, Link } from "@chakra-ui/react";
 import { FaLinkedin } from "react-icons/fa";
 import { IoLogoGithub } from "react-icons/io";
 
@@ -8,7 +8,6 @@ import CareerPath from "@/components/CareerPath/CareerPath";
 
 export default function Home() {
   return (
-    <Theme appearance="dark">
       <div>
         <Container className="p-3">
           <Row className="p-1">
@@ -170,16 +169,15 @@ export default function Home() {
           <Container>
             <h6>
               If you happen to like my work and would like to reach out, please
-              mail me at <Span>
+              mail me at <span>
                 <Link href="mailto:vjaiwantx@gmail.com">
                    vjaiwantx@gmail.com
                 </Link>
-              </Span>
+              </span>
               .
             </h6>
           </Container>
         </Container>
       </div>
-    </Theme>
   );
 }
