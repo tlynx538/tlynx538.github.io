@@ -1,12 +1,18 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0d090b;
+  --foreground: #f3eee9;
+  --surface: #171114;
+  --surface-muted: #21171a;
+  --muted: #b0a5a4;
+  --accent: #33ff99;
+  --accent-soft: #f8d9d8;
+  --line: #3c2c31;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0d090b;
+    --foreground: #f3eee9;
   }
 }
 
@@ -70,37 +76,6 @@
 }
 
 /* ---------------------------
-   Helvetica Now Text
----------------------------- */
-@font-face {
-  font-family: "Helvetica Now Text Black";
-  src: url("/fonts/helveticanowtext-black-demo.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Helvetica Now Text Black";
-  src: url("/fonts/helveticanowtext-blackitalic-demo.ttf") format("truetype");
-  font-weight: 900;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Helvetica Now Text Bold";
-  src: url("/fonts/helveticanowtext-bold-demo.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Helvetica Now Text Bold";
-  src: url("/fonts/helveticanowtext-bolditalic-demo.ttf") format("truetype");
-  font-weight: 700;
-  font-style: italic;
-}
-
-/* ---------------------------
    Base Styles
 ---------------------------- */
 html,
@@ -112,7 +87,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Helvetica Now Text", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -126,6 +101,15 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+hr {
+  border-color: var(--line);
+  opacity: 1;
 }
 
 @media (prefers-color-scheme: dark) {

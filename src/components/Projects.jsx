@@ -2,9 +2,23 @@ import { Card, Icon, Badge, HStack } from "@chakra-ui/react";
 
 import { GrLinkNext } from "react-icons/gr";
 import { Row, Col, Container } from "react-bootstrap";
+import styles from "@/app/page.module.css";
 
 export default function Projects() {
   const projectList = [
+    {
+  title: "Multi-Agent Catalog Parser",
+  link: "https://github.com/tlynx538/Multi-Agent-Catalog-Parser",
+  description:
+    "LangGraph-based agentic pipeline for converting vendor PDF catalogs and quotations into validated structured product and commercial records.",
+  tech: [
+    { label: "LangGraph", color: "purple" },
+    { label: "Qdrant", color: "red" },
+    { label: "Python", color: "blue" },
+    { label: "Pydantic", color: "teal" },
+    { label: "OpenDataLoader", color: "orange" },
+  ],
+},
     {
       title: "Tafsiri-S2ST",
       link: "https://github.com/mbwika/Tafsiri-S2ST",
@@ -13,6 +27,8 @@ export default function Projects() {
           <span>
             <a
               href="https://artscilab.utdallas.edu/2025/04/04/tafsiri-s2st/"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ textDecoration: "none" }}
             >
               Tafsiri
@@ -63,17 +79,16 @@ export default function Projects() {
   const renderProjectCard = (project, index) => (
     <Card.Root
       key={index}
-      className="mb-3 p-3"
-      style={{ width: "100%", maxWidth: "850px" }}
+      className={`${styles.projectCard} mb-3 p-3`}
     >
       <Card.Body gap="2">
-        <Card.Title mt="2">
+        <Card.Title className={styles.projectTitle} mt="2">
           <b>{project.title}</b>
         </Card.Title>
-        <Card.Description>{project.description}</Card.Description>
+        <Card.Description className={styles.projectDescription}>{project.description}</Card.Description>
         <Row md={1}>
           <Col>
-            <p style={{ fontSize: "12px", fontWeight: "800" }}>TECH USED</p>
+            <p className={styles.projectMeta}>TECH USED</p>
             <HStack spacing={3} wrap="wrap">
               {project.tech.length > 0 ? (
                 project.tech.map((t, i) => (
@@ -96,9 +111,9 @@ export default function Projects() {
           </Col>
         </Row>
       </Card.Body>
-      <Card.Footer justifyContent="flex-end">
-        <Icon fontSize="2xl" color="white.700">
-          <a href={project.link}>
+      <Card.Footer className={styles.projectFooter} justifyContent="flex-end">
+        <Icon className={styles.projectArrow} fontSize="2xl">
+          <a href={project.link} target="_blank" rel="noopener noreferrer">
             <GrLinkNext />
           </a>
         </Icon>
@@ -108,20 +123,12 @@ export default function Projects() {
 
   return (
     <Col md={8}>
-      <h3 className="mb-3">&gt; Projects</h3>
-      <Container
-        style={{
-          overflowY: "auto",
-          maxHeight: "550px",
-          maxWidth: "900px",
-          width: "100%",
-        }}
-      >
+      <h3 className="mb-3 mt-3">&gt; Projects</h3>
+      <Container className={styles.projectList}>
         <Col>{projectList.map(renderProjectCard)}</Col>
         <Col>
           <Card.Root
-            className="mb-3 p-3"
-            style={{ width: "100%", maxWidth: "850px" }}
+            className={`${styles.projectCard} ${styles.projectMore} mb-3 p-3`}
           >
             <Card.Body
               gap="2"
@@ -131,12 +138,16 @@ export default function Projects() {
                 alignItems: "center",
               }}
             >
-              <Card.Title mt="2">
+              <Card.Title className={styles.projectTitle} mt="2">
                 <b>See More Projects</b>
               </Card.Title>
 
-              <Icon fontSize="2xl" color="white.700">
-                <a href="https://github.com/tlynx538">
+              <Icon className={styles.projectArrow} fontSize="2xl">
+                <a
+                  href="https://github.com/tlynx538"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <GrLinkNext />
                 </a>
               </Icon>
