@@ -1,64 +1,27 @@
-import { Row, Col, Container } from "react-bootstrap";
-import { Link } from "@chakra-ui/react";
-import { FaLinkedin } from "react-icons/fa";
-import { IoLogoGithub } from "react-icons/io";
-
-import Projects from "@/components/Projects";
-import CareerPath from "@/components/CareerPath/CareerPath";
-import Skills from "@/components/Skills";
-import Whoami from "@/components/Whoami";
+import ProjectList from "@/components/ProjectList";
+import ResumeLink from "@/components/ResumeLink";
+import { githubUrl, linkedinUrl } from "@/content/site";
+import Link from "next/link";
+import Torus from "@/components/Torus";
 
 export default function Home() {
-  return (
-      <div>
-        <Container className="p-3">
-          <Row className="p-1">
-            <Row className="align-items-center">
-              <Col>
-                <h1>Vinayak Jaiwant Mooliyil</h1>
-                <p style={{ fontStyle: "italic" }}>
-                  In Pursuit of Pure Wisdom and Excellence
-                </p>
-              </Col>
-              <Col
-                xs="auto"
-                className="ms-auto d-flex align-items-center"
-                style={{ gap: "20px" }} // consistent spacing
-              >
-                <Link href="https://github.com/tlynx538" target="_blank" rel="noopener noreferrer">
-                  <IoLogoGithub size="30px" />
-                </Link>
-
-                <Link href="https://www.linkedin.com/in/vjaiwantx/" target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin size="30px" />
-                </Link>
-              </Col>
-            </Row>
-          </Row>
-          <hr />
-          <Whoami />
-          <Row className="mt-3 p-2">
-              <Skills />
-          </Row>
-          <Row className="p-3">
-            {/* projects section here */}
-            <Projects />
-            {/* career section here */}
-            <CareerPath />
-          </Row>
-          <hr />
-          <Container>
-            <h6>
-              If you happen to like my work and would like to reach out, please
-              mail me at <span>
-                <Link href="mailto:vjaiwantx@gmail.com" target="_blank" rel="noopener noreferrer">
-                   vjaiwantx@gmail.com
-                </Link>
-              </span>
-              .
-            </h6>
-          </Container>
-        </Container>
-      </div>
-  );
+  return <main id="main">
+    <section className="hero frame"><div className="hero-meta micro"><span>Portfolio / 2026</span><span>Engineering · Data · AI</span></div>
+      <div className="hero-stage">
+        <Torus href="https://mathworld.wolfram.com/Torus.html" />
+        <div className="hero-title">
+          <p className="eyebrow">Hello, I’m</p>
+          <h1>Vinayak<br />Jaiwant<br /><em>Mooliyil.</em></h1>
+          <p className="micro">In Pursuit of Pure Wisdom and Excellence</p></div>
+          <div className="hero-context">
+            <p>IT and Data Analytics Intern at <a href="https://www.dallasrugs.com/" target="_blank" rel="noopener noreferrer">Dallas Rugs ↗</a>
+            </p>
+          </div>
+        </div>
+      <div className="hero-bottom"><span className="micro">Selected work and experience ↓</span><div><Link href="/contact/">Get in touch ↗</Link><ResumeLink /></div></div>
+    </section>
+    <section className="section frame" aria-labelledby="work-title"><div className="section-head"><span className="micro">01 / Work</span><h2 id="work-title">Selected projects</h2><Link href="/projects/">All projects ↗</Link></div><ProjectList limit={4} /></section>
+    <section className="intro-band frame"><span className="micro">02 / Background</span><h2>Building across data, software and AI.</h2><div><p>Skilled in developing agentic AI systems, data pipelines, backend services, web applications, and automated CI/CD workflows.</p><Link href="/career/">Explore career ↗</Link></div></section>
+    <section className="closing frame"><span className="micro">Elsewhere</span><div><a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div></section>
+  </main>;
 }
