@@ -1,5 +1,11 @@
 # Release validation — 2026-11-05
 
+## Follow-up: synchronized header torus
+
+The owner observed that the GIF header icon's axis and spin did not match the original hero torus. The header now uses the same Three.js geometry, camera, material and renderer path as the hero. A shared clock sets rotation phase and a shared pointer response sets tilt, so independently mounted renderers stay aligned. Both retain the frame cap, visibility controls and static SVG reduced-motion/failure fallbacks. This replaces the GIF-header optimization described in the original release checks below; the GIF remains the favicon. The production build passed again after this correction.
+
+Chrome checks at 1440px and 390px observed two active canvases on the homepage and matching model-view matrices before and after pointer movement (maximum element difference below 0.002). About retained one active header canvas. With reduced motion at load, both SVG fallbacks appeared and no canvas was created. No browser exceptions or horizontal overflow occurred. Captures are `screenshots/release-synced-home-{1440,390}.png`.
+
 The owner authorized the completed portfolio's commit, merge into main, and remote push. Footer wording: “This website was built using the OpenCode workflow, with small adjustments made using Codex.” The workflow name links to its public GitHub repository.
 
 ## Build and delivery

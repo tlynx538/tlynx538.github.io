@@ -3,6 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 
 const TAU = Math.PI * 2;
+// Both toruses sample one clock and pointer response, including after navigation.
+const pointer = { x: 0, y: 0 };
+const rotation = { x: .15, z: 0, lastSample: 0 };
+const sampleRotation = (now) => {
+  const elapsed = Math.min(now - rotation.lastSample, 50);
+  rotation.lastSample = now;
+  const smoothing = 1 - Math.pow(.975, elapsed / (1000 / 60));
+  rotation.x += (.15 + pointer.y * .13 - rotation.x) * smoothing;
+  rotation.z += (pointer.x * .16 - rotation.z) * smoothing;
+  return [rotation.x, (now * .000102) % TAU, rotation.z];
+};
 const fallbackPoint = (u, v) => {
   const radius = 1.4 + .58 * Math.cos(v);
   return `${(200 + radius * Math.cos(u) * 84).toFixed(1)},${(200 + (radius * Math.sin(u) * .88 + .58 * Math.sin(v) * .25) * 84).toFixed(1)}`;
@@ -21,7 +32,6 @@ export default function Torus({ compact = false, href }) {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    if (compact) return;
     const element = host.current;
     const stage = element.parentElement;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -42,7 +52,6 @@ export default function Torus({ compact = false, href }) {
     let colorAttribute;
     let lastLight = 0;
     let lastRender = 0;
-    const pointer = { x: 0, y: 0 };
     const onPointer = (event) => {
       const bounds = element.getBoundingClientRect();
       pointer.x = (event.clientX - bounds.left) / bounds.width - .5;
@@ -70,7 +79,6 @@ export default function Torus({ compact = false, href }) {
         frame = requestAnimationFrame(tick);
         return;
       }
-      const elapsed = Math.min(now - lastRender, 50);
       lastRender = now;
       if (colorAttribute && now - lastLight >= 55) {
         const values = colorAttribute.array;
@@ -90,10 +98,7 @@ export default function Torus({ compact = false, href }) {
         colorAttribute.needsUpdate = true;
         lastLight = now;
       }
-      group.rotation.y += elapsed * .000102;
-      const smoothing = 1 - Math.pow(.975, elapsed / (1000 / 60));
-      group.rotation.x += (.15 + pointer.y * .13 - group.rotation.x) * smoothing;
-      group.rotation.z += (pointer.x * .16 - group.rotation.z) * smoothing;
+      group.rotation.set(...sampleRotation(now));
       renderer.render(scene, camera);
       frame = requestAnimationFrame(tick);
     };
@@ -189,16 +194,21 @@ export default function Torus({ compact = false, href }) {
     observer.observe(element);
     media.addEventListener("change", onMedia);
     document.addEventListener("visibilitychange", onVisibility);
-    stage.addEventListener("pointermove", onPointer);
-    stage.addEventListener("pointerleave", onLeave);
+    if (!compact) {
+      stage.addEventListener("pointermove", onPointer);
+      stage.addEventListener("pointerleave", onLeave);
+    }
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
       observer.disconnect();
       media.removeEventListener("change", onMedia);
       document.removeEventListener("visibilitychange", onVisibility);
-      stage.removeEventListener("pointermove", onPointer);
-      stage.removeEventListener("pointerleave", onLeave);
+      if (!compact) {
+        stage.removeEventListener("pointermove", onPointer);
+        stage.removeEventListener("pointerleave", onLeave);
+        onLeave();
+      }
       resizeObserver?.disconnect();
       if (renderer) {
         renderer.domElement.removeEventListener("webglcontextlost", onLost);
@@ -210,8 +220,6 @@ export default function Torus({ compact = false, href }) {
       material?.dispose();
     };
   }, [compact]);
-
-  if (compact) return <div className="hero-torus torus-compact" aria-hidden="true"><picture><source media="(prefers-reduced-motion: reduce)" srcSet="/favicon.ico" type="image/x-icon" /><img src="/donut.gif" width="56" height="56" alt="" decoding="async" /></picture></div>;
 
   const Host = href ? "a" : "div";
   return <Host ref={host} href={href} className={`hero-torus${compact ? " torus-compact" : ""}${active ? " is-active" : ""}`} aria-hidden={href ? undefined : true} aria-label={href ? "Learn about the torus on Wolfram MathWorld" : undefined}><svg aria-hidden="true" className="torus-fallback" viewBox="0 0 400 400" fill="none" stroke="currentColor" strokeWidth=".75">{fallbackFibers.map((path, index) => <path key={`fiber-${index}`} d={path} strokeOpacity={.38 + .24 * Math.sin(index * 4.1) ** 2}/>)}{fallbackRings.map((path, index) => <path key={`ring-${index}`} d={path} strokeOpacity=".25"/>)}</svg></Host>;

@@ -2,7 +2,7 @@
 
 An editorial portfolio built with Next.js App Router and exported as a static site for GitHub Pages. The current visual direction is dark charcoal/slate with a hero-only WebGL torus and a static fallback.
 
-Built using the [OpenCode Programming Workflow](https://github.com/tlynx538/OpenCode-Programming-Workflow), with small adjustments made using Codex. The header uses the lightweight transparent donut GIF; visitors who prefer reduced motion see the static icon instead.
+Built using the [OpenCode Programming Workflow](https://github.com/tlynx538/OpenCode-Programming-Workflow), with small adjustments made using Codex. The header and homepage donuts share the same 3D geometry, animation clock and pointer response; visitors who prefer reduced motion see static SVG fallbacks instead. The transparent GIF remains the tab icon.
 
 Start with the [project-specific agent handoff](docs/agentic/README.md) and [current checkpoint](docs/agentic/checkpoint.md) for owner-confirmed decisions, source boundaries, verification history and next steps. Audits and screenshot provenance are in [design QA](docs/design/visual-qa.md).
 
