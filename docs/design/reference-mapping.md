@@ -1,0 +1,9 @@
+# Reference-to-portfolio mapping (audit, not implementation)
+
+| User-approved source role | Evidence | Appropriate original adaptation | Exclude |
+| --- | --- | --- | --- |
+| AIR visual language, primary | `reference-audit.md`: page labels at top, thin dividing lines, 20px desktop / 10px mobile gutters, two-column engineer layout, narrow typography scale, long history and roster/project layouts. | Compact accessible nav, restrained rules and whitespace, scannable directory/cards, editorial timeline, flexible columns that stack on phones; preserve our five projects/four roles and links. | AIR identity, orbital line artwork, photos/posters, named people, claims, inaccessible dark-on-dark introductory state and unlicensed fonts. |
+| TypeRoom editorial only | Rendered screenshots `screenshots/typeroom-{1440,390}.png`: two-column article/image desktop composition; mobile stacks image then heading but clips text. | Only the asymmetric article composition is a future layout reference; Writing remains omitted. | Its fonts, colors, imagery and mobile overflow. |
+| Studio Rotate motion only | Rendered `/` initial desktop/mobile show high-contrast typography and media-led tiles; no frame-by-frame motion instrumentation. | If implemented later, use subtle bounded transitions, stable initial content and `prefers-reduced-motion` fallback; verify animation against actual user action. | Its black/magenta visual system, media, acquisition message or assumed motion timings; snapshot alone cannot demonstrate animation. |
+
+User journey guardrails: current single-page content and outbound identities must survive routing; project navigation must work with JS-free static output; writing remains deferred; résumé has a discoverable control with literal blank `href=""` and inert activation until a user-supplied external PDF is configured, then opens separately. None of these actions was implemented or exercised by this audit. No reference assets copied.

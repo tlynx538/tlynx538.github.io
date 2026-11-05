@@ -13,7 +13,7 @@ export default function Whoami() {
       >
         <List.Root>
           <List.Item>
-            <b>Agentic Data Engineer</b> at{" "}
+            <b>IT and Data Analytics Intern</b> at{" "}
             <b>
               <a
                 href="https://www.dallasrugs.com/"
