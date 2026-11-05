@@ -36,6 +36,15 @@ a {
 a:hover {
   text-decoration: underline;
 }
+.link-arrow {
+  white-space: nowrap;
+}
+.link-arrow svg {
+  display: inline-block;
+  width: .8em;
+  height: .8em;
+  vertical-align: -.05em;
+}
 @keyframes page-arrive {
   from { opacity: .97; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
