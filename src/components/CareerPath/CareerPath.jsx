@@ -26,7 +26,7 @@ export default function CareerPath() {
               <div className="glow-dot"></div>
             </TimelineConnector>
             <TimelineContent className="careerContent" gap="1">
-              <TimelineTitle>Agentic Data Engineer</TimelineTitle>
+              <TimelineTitle>IT and Data Analytics Intern</TimelineTitle>
               <b>Dallas Rugs</b>
               <TimelineDescription>June 2025 - Present</TimelineDescription>
               <Text className="mt-1">
