@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const TAU = Math.PI * 2;
-// Both toruses sample one clock and pointer response, including after navigation.
+// The persistent torus keeps its clock and pointer response across navigation.
 const pointer = { x: 0, y: 0 };
 const rotation = { x: .15, z: 0, lastSample: 0 };
 const sampleRotation = (now) => {
@@ -66,7 +66,9 @@ export default function Torus({ compact = false, href }) {
     };
     const resize = () => {
       if (!renderer || !camera) return;
-      const { width, height } = element.getBoundingClientRect();
+      // Use layout dimensions so a scaled corner torus keeps hero-quality pixels.
+      const width = element.clientWidth;
+      const height = element.clientHeight;
       if (!width || !height) return;
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
@@ -222,5 +224,5 @@ export default function Torus({ compact = false, href }) {
   }, [compact]);
 
   const Host = href ? "a" : "div";
-  return <Host ref={host} href={href} className={`hero-torus${compact ? " torus-compact" : ""}${active ? " is-active" : ""}`} aria-hidden={href ? undefined : true} aria-label={href ? "Learn about the torus on Wolfram MathWorld" : undefined}><svg aria-hidden="true" className="torus-fallback" viewBox="0 0 400 400" fill="none" stroke="currentColor" strokeWidth=".75">{fallbackFibers.map((path, index) => <path key={`fiber-${index}`} d={path} strokeOpacity={.38 + .24 * Math.sin(index * 4.1) ** 2}/>)}{fallbackRings.map((path, index) => <path key={`ring-${index}`} d={path} strokeOpacity=".25"/>)}</svg></Host>;
+  return <Host ref={host} href={href} target={href ? "_blank" : undefined} rel={href ? "noopener noreferrer" : undefined} className={`hero-torus${compact ? " torus-compact" : ""}${active ? " is-active" : ""}`} aria-hidden={href ? undefined : true} aria-label={href ? "Learn about the torus on Wolfram MathWorld" : undefined}><svg aria-hidden="true" className="torus-fallback" viewBox="0 0 400 400" fill="none" stroke="currentColor" strokeWidth=".75">{fallbackFibers.map((path, index) => <path key={`fiber-${index}`} d={path} strokeOpacity={(.38 + .24 * Math.sin(index * 4.1) ** 2).toFixed(3)}/>)}{fallbackRings.map((path, index) => <path key={`ring-${index}`} d={path} strokeOpacity=".25"/>)}</svg></Host>;
 }

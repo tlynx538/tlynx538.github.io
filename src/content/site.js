@@ -1,6 +1,5 @@
 export const siteUrl = "https://www.vjaiwantx.co";
-// Supply an external PDF URL here when the résumé has been published.
-export const resumeUrl = "";
+export const resumeUrl = "https://www.dropbox.com/scl/fi/fi181pehpszwrzwdpa0vc/Vinayak-Jaiwant-MOOLIYIL.pdf?rlkey=6v8l0nxuskt00xs0joksonwms&st=0k230gcl&dl=0";
 export const githubUrl = "https://github.com/tlynx538";
 export const linkedinUrl = "https://www.linkedin.com/in/vjaiwantx/";
 export const email = "vjaiwantx@gmail.com";

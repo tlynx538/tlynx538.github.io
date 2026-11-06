@@ -12,7 +12,7 @@ export default function SiteNav() {
   return <nav className="site-nav" aria-label="Main navigation">
     <button className="menu-toggle" type="button" aria-expanded={open} aria-controls="primary-links" onClick={() => setOpen(!open)}>{open ? "Close menu −" : "Menu +"}</button>
     <div id="primary-links" className={`nav-links ${open ? "is-open" : ""}`}>
-      {links.map(([href, label]) => <Link key={href} href={href} aria-current={pathname === href || (href === "/projects/" && pathname.startsWith("/projects/")) ? "page" : undefined} onClick={() => setOpen(false)}>{label}</Link>)}
+      {links.map(([href, label]) => <Link target="_blank" rel="noopener noreferrer" key={href} href={href} aria-current={pathname === href || (href === "/projects/" && pathname.startsWith("/projects/")) ? "page" : undefined} onClick={() => setOpen(false)}>{label}</Link>)}
     </div>
   </nav>;
 }

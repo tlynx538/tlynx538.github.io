@@ -1,7 +1,8 @@
 import LinkArrow from "@/components/LinkArrow";
 import "./globals.css";
 import SiteNav from "@/components/SiteNav";
-import Torus from "@/components/Torus";
+import TravelingTorus from "@/components/TravelingTorus";
+import CircleCursor from "@/components/CircleCursor";
 import Link from "next/link";
 import { email, githubUrl, linkedinUrl, siteUrl } from "@/content/site";
 
@@ -17,8 +18,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return <html lang="en"><body>
     <a className="skip-link" href="#main">Skip to content</a>
-    <header className="site-header frame"><Link className="wordmark" href="/" aria-label="Vinayak Jaiwant Mooliyil, home"><Torus compact /></Link><SiteNav /></header>
+    <header className="site-header frame"><span className="wordmark" data-torus-corner aria-hidden="true" /><SiteNav /></header>
     {children}
-    <footer className="site-footer frame"><div className="footer-lead"><span className="micro">Get in touch / Portfolio</span><a href={`mailto:${email}`}>{email}<LinkArrow /></a></div><div className="footer-links"><div><span className="micro">Explore</span><Link href="/projects/">Projects</Link><Link href="/career/">Career</Link><Link href="/about/">About</Link><Link href="/contact/">Contact</Link></div><div><span className="micro">Elsewhere</span><a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub<LinkArrow /></a><a href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn<LinkArrow /></a></div></div><div className="footer-base micro"><span>© {new Date().getFullYear()} Vinayak Jaiwant Mooliyil</span><p className="footer-credit">This website was built using the <a href="https://github.com/tlynx538/OpenCode-Programming-Workflow" target="_blank" rel="noopener noreferrer">OpenCode workflow</a>, with small adjustments made using Codex.</p><a href="#main">Back to top ↑</a></div></footer>
+    <TravelingTorus />
+    <CircleCursor />
+    <footer className="site-footer frame"><div className="footer-lead"><span className="micro">Get in touch / Portfolio</span><a href={`mailto:${email}`} target="_blank" rel="noopener noreferrer">{email}<LinkArrow /></a></div><div className="footer-links"><div><span className="micro">Explore</span><Link target="_blank" rel="noopener noreferrer" href="/projects/">Projects</Link><Link target="_blank" rel="noopener noreferrer" href="/career/">Career</Link><Link target="_blank" rel="noopener noreferrer" href="/about/">About</Link><Link target="_blank" rel="noopener noreferrer" href="/contact/">Contact</Link></div><div><span className="micro">Elsewhere</span><a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub<LinkArrow /></a><a href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn<LinkArrow /></a></div></div><div className="footer-base micro"><span>© {new Date().getFullYear()} Vinayak Jaiwant Mooliyil</span><p className="footer-credit">This website was built using the <a href="https://github.com/tlynx538/OpenCode-Programming-Workflow" target="_blank" rel="noopener noreferrer">OpenCode workflow</a>, with small adjustments made using Codex.</p><a href="#main">Back to top ↑</a></div></footer>
   </body></html>;
 }
