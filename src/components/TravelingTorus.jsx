@@ -103,7 +103,7 @@ export default function TravelingTorus() {
   }, [pathname, home]);
 
   return <div className="torus-layer">
-    <Link target="_blank" rel="noopener noreferrer" ref={host} className={`traveling-torus${home ? " is-home" : " is-corner"}`}
+    <Link target={home ? "_blank" : undefined} rel={home ? "noopener noreferrer" : undefined} ref={host} className={`traveling-torus${home ? " is-home" : " is-corner"}`}
       href={home ? "https://mathworld.wolfram.com/Torus.html" : "/"}
       aria-label={home ? "Learn about the torus on Wolfram MathWorld" : "Vinayak Jaiwant Mooliyil, home"}>
       <Torus />
